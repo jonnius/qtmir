@@ -1,35 +1,7 @@
 pkg_check_modules(MIROIL miroil REQUIRED)
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/platforms/mirserver
-    ${CMAKE_SOURCE_DIR}/src/common
-)
-
-include_directories(
-    SYSTEM
-    ${GLIB_INCLUDE_DIRS}
-    ${GIO_INCLUDE_DIRS}
-    ${GIO_UNIX_INCLUDE_DIRS}
-    ${MIROIL_INCLUDE_DIRS}
-    ${MIRAL_INCLUDE_DIRS}
-    ${MIRSERVER_INCLUDE_DIRS}
-    ${MIRRENDERERGLDEV_INCLUDE_DIRS}
-    ${PROCESS_CPP_INCLUDE_DIRS}
-    ${UBUNTU_PLATFORM_API_INCLUDE_DIRS}
-    ${UBUNTU_APP_LAUNCH_INCLUDE_DIRS}
-    ${GSETTINGS_QT_INCLUDE_DIRS}
-    ${CGMANAGER_INCLUDE_DIRS}
-
-    ${LTTNG_INCLUDE_DIRS}
-    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
-    ${Qt5Qml_PRIVATE_INCLUDE_DIRS}
-    ${Qt5Quick_PRIVATE_INCLUDE_DIRS}
-)
-
 # We have to remove -pedantic in order to compile tracepoints.c
 string (REPLACE " -pedantic " " " CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-# Needed to compile tracepoints in C99 mode.
-add_definitions(-DBYTE_ORDER=__BYTE_ORDER)
 
 set(QMLMIRPLUGIN_SRC
     application_manager.cpp
@@ -74,6 +46,37 @@ set(QMLMIRPLUGIN_SRC
 add_library(unityapplicationplugin SHARED
     ${QMLMIRPLUGIN_SRC}
 )
+
+# Needed to compile tracepoints in C99 mode.
+target_compile_definitions(unityapplicationplugin PRIVATE -DBYTE_ORDER=__BYTE_ORDER)
+
+target_include_directories(
+  unityapplicationplugin PRIVATE ${CMAKE_SOURCE_DIR}/src/platforms/mirserver
+                                 ${CMAKE_SOURCE_DIR}/src/common)
+
+target_include_directories(
+    unityapplicationplugin
+    SYSTEM
+    PRIVATE
+    ${GLIB_INCLUDE_DIRS}
+    ${GIO_INCLUDE_DIRS}
+    ${GIO_UNIX_INCLUDE_DIRS}
+    ${MIROIL_INCLUDE_DIRS}
+    ${MIRAL_INCLUDE_DIRS}
+    ${MIRSERVER_INCLUDE_DIRS}
+    ${MIRRENDERERGLDEV_INCLUDE_DIRS}
+    ${PROCESS_CPP_INCLUDE_DIRS}
+    ${UBUNTU_PLATFORM_API_INCLUDE_DIRS}
+    ${UBUNTU_APP_LAUNCH_INCLUDE_DIRS}
+    ${GSETTINGS_QT_INCLUDE_DIRS}
+    ${CGMANAGER_INCLUDE_DIRS}
+
+    ${LTTNG_INCLUDE_DIRS}
+    ${Qt5Gui_PRIVATE_INCLUDE_DIRS}
+    ${Qt5Qml_PRIVATE_INCLUDE_DIRS}
+    ${Qt5Quick_PRIVATE_INCLUDE_DIRS}
+)
+
 
 # Frig for files that still rely on mirserver-dev
 string(REPLACE ";" " -I" QTMIR_ADD_MIRSERVER "-I ${MIRSERVER_INCLUDE_DIRS}")

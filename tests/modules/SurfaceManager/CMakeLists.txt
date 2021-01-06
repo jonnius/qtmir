@@ -11,17 +11,19 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/tests/framework
 )
 
-include_directories(
+add_executable(surfacemanager_test ${SURFACE_MANAGER_TEST_SOURCES})
+
+add_dependencies(surfacemanager_test qtmir-test-framework-static)
+
+target_include_directories(
+  surfacemanager_test
   SYSTEM
+  PUBLIC
   ${APPLICATION_API_INCLUDE_DIRS}
   ${MIRAL_INCLUDE_DIRS}
   ${MIROIL_INCLUDE_DIRS}
   ${MIRTEST_INCLUDE_DIRS}
 )
-
-add_executable(surfacemanager_test ${SURFACE_MANAGER_TEST_SOURCES})
-
-add_dependencies(surfacemanager_test qtmir-test-framework-static)
 
 target_link_libraries(
   surfacemanager_test
