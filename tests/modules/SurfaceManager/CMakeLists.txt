@@ -4,26 +4,20 @@ set(
   ${CMAKE_SOURCE_DIR}/src/common/debughelpers.cpp
 )
 
-include_directories(
-  ${CMAKE_SOURCE_DIR}/src/common
-  ${CMAKE_SOURCE_DIR}/src/platforms/mirserver
-  ${CMAKE_SOURCE_DIR}/src/modules
-  ${CMAKE_SOURCE_DIR}/tests/framework
-)
-
 add_executable(surfacemanager_test ${SURFACE_MANAGER_TEST_SOURCES})
 
 add_dependencies(surfacemanager_test qtmir-test-framework-static)
 
 target_include_directories(
   surfacemanager_test
-  SYSTEM
-  PUBLIC
-  ${APPLICATION_API_INCLUDE_DIRS}
-  ${MIRAL_INCLUDE_DIRS}
-  ${MIROIL_INCLUDE_DIRS}
-  ${MIRTEST_INCLUDE_DIRS}
-)
+  PRIVATE ${CMAKE_SOURCE_DIR}/src/common
+          ${CMAKE_SOURCE_DIR}/src/platforms/mirserver
+          ${CMAKE_SOURCE_DIR}/src/modules ${CMAKE_SOURCE_DIR}/tests/framework)
+
+target_include_directories(
+  surfacemanager_test
+  PRIVATE SYSTEM ${APPLICATION_API_INCLUDE_DIRS} ${MIRAL_INCLUDE_DIRS}
+          ${MIROIL_INCLUDE_DIRS} ${MIRTEST_INCLUDE_DIRS})
 
 target_link_libraries(
   surfacemanager_test
